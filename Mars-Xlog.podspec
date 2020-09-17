@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
 #  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 
 
-  s.static_framework = true  #依赖库是静态库也会导致必须此库是静态库
+#  s.static_framework = true  #依赖库是静态库也会导致必须此库是静态库
 
   ## 模块文件
   #s.subspec "MarsKit" do |mk|
