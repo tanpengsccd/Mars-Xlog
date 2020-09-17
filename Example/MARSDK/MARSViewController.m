@@ -27,6 +27,7 @@
     
 }
 - (IBAction)onBtnConfig:(id)sender {
+    //配置
     [XLogHelper ConfigXloggerWithPath:@"/xlog"
                       filenamePrefix:@"demo"
                            publicKey:@""
@@ -35,6 +36,7 @@
     ];
 }
 - (IBAction)onBtnLog:(id)sender {
+    //打印 （使用宏）
     LOG_INFO(   "TEST", @"%@",@"LOG is Ok!!! this will be show ");
     LOG_DEBUG(  "TEST", @"%@",@"this won't be show"); // because set level to info ,this won't be show
 }

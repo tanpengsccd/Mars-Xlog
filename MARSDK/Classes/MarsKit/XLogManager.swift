@@ -19,7 +19,8 @@ public class XLogManager {
         self.xlogDir = Self.DefaultXlogDir
     }
     private var xlogDir:String
-    public func configDefault(){
+    ///默认配置
+    public func defaultConfig(){
         let isConsoleLog:Bool = {
             #if DEBUG
             return true
@@ -27,8 +28,7 @@ public class XLogManager {
             return false
             #endif
         }()
-        configXloggerWithPath(path: XLogManager.self.DefaultXlogDir, filenamePrefix: "WZ", publicKey: "b1e5c081edf37ed8f202c77e67f3521cf1f86ffd831ab37c28c4e53720ca29647cbb0300183f74c2d55159eb6fe3c3783a71022d4fefce146e4ca893a43c4add", level: .debug, isConsoleLog: isConsoleLog)
-        // private-key 5e73e342d4c87819d3a2a0013eb61b2267afc4e2ba6a600280a87ddeb14d95f2
+        configXloggerWithPath(path: XLogManager.self.DefaultXlogDir, filenamePrefix: "XLOG", publicKey: "", level: .debug, isConsoleLog: isConsoleLog)
     }
     ///最近的常规日志(按时间戳升序排列)
     public var allNormalLogs:[URL]{
@@ -44,17 +44,27 @@ public class XLogManager {
 
         return filtered
     }
-    //MARK:- copy from
+    
 
+    
+    /// 使用前先配置
+    /// - Parameters:
+    ///   - path: log 存取路径,默认“/Log”
+    ///   - filenamePrefix: log文件名前缀
+    ///   - publicKey: 日志加密的公钥
+    ///   - level: 日志的等级，用于筛选日志
+    ///   - isConsoleLog: 是否打印再控制台，一般是调试模式才输出控制台，会额外消耗性能
     public func configXloggerWithPath(path:String, filenamePrefix:String, publicKey:String, level:XLoggerLevel, isConsoleLog:Bool){
         
         XLogHelper.configXlogger(withPath: path, filenamePrefix: filenamePrefix, publicKey: publicKey, level: level, isConsoleLog: isConsoleLog)
         self.xlogDir = path
     }
+    ///关闭
     public func close(){
         XLogHelper.close()
     }
-    public func fflush_sync(){
+    ///冲刷，用于将缓存.map3文件转换为.xlog文件
+    public func flush_sync(){
         XLogHelper.flush_sync()
     }
     
@@ -109,48 +119,4 @@ public class XLog{
         XLogHelper.log(with: level, moduleName: tag.emojiMark, fileName: fileName, lineNumber: Int32(lineNumber), funcName: funcName, message: msg)
     }
 }
-
-
-/*
-//MARK:- networking
-extension XLogManager{
-    ///上传日志
-    class func uploadXLog(willShowLoading:Bool,success: @escaping ((String) -> Void) ,failure:@escaping (SugarNetWorking_Error) -> Void){
-        XWLogManager.flush_sync()
-
-        if let log = XLogManager.allNormalLogs.last{
-            WZBackendNetWorkingManager.sharedInstance().uploadLogFile(fileKind: .xlog, localFilePath: log, willShowLoading: willShowLoading, success: { res in
-                if let address = (res["data"] as? [String:Any])?["address"] as? String {
-                    success(address)
-                }else{
-                    failure(.criterion(code: "", msg: "无address"))
-                }
-            },failure: failure)
-        }
-    }
-    ///崩溃自动触发上传问题反馈
-    class func crashAutoFeedBack(){
-        guard !WZBackendNetWorkingManager.shared.service_token.isEmpty else{
-            return
-        }
-        XWLogManager.uploadXLog(willShowLoading: false, success: { (logAddress) in
-            let model = Feedback.init()
-            model.request_model.contact = "15900000000"
-            model.request_model.details = "崩溃自动上报"
-            model.request_model.title = "崩溃自动上报"
-            model.request_model.logAddress =  logAddress
-            
-            WZBackendNetWorkingManager.sharedInstance().asyncRequestXWTBackend(req_Model: model,willShowLoading: false, success: {res in
-                XWLogManager.Log(level: .info, tag: .net, msg: "崩溃自动上报成功")
-                Defaults.isCrashedLastRun = false //标记还原
-            },failure: { error in
-                XWLogManager.Log(level: .warning, tag: .net, msg: error.errorDescription())
-            })
-        }, failure: { error in
-            XWLogManager.Log(level: .warning, tag: .net, msg: error.errorDescription())
-        })
-        
-    }
-}
-*/
 
