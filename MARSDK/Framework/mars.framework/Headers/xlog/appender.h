@@ -31,8 +31,24 @@ enum TAppenderMode
     kAppednerSync,
 };
 
-void appender_open(TAppenderMode _mode, const char* _dir, const char* _nameprefix, const char* _pub_key);
-void appender_open_with_cache(TAppenderMode _mode, const std::string& _cachedir, const std::string& _logdir, const char* _nameprefix, const char* _pub_key);
+enum TCompressMode{
+    kZlib,
+    kZstd,
+};
+
+struct XLogConfig{
+    TAppenderMode mode_ = kAppednerAsync;
+    std::string logdir_;
+    std::string nameprefix_;
+    std::string pub_key_;
+    TCompressMode compress_mode_ = kZlib;
+    int compress_level_ = 6;
+    std::string cachedir_;
+    int cache_days_ = 0;
+};
+
+void appender_open(const XLogConfig& _config);
+
 void appender_flush();
 void appender_flush_sync();
 void appender_close();
@@ -50,5 +66,11 @@ void appender_set_console_log(bool _is_open);
  */
 void appender_set_max_file_size(uint64_t _max_byte_size);
 
+/*
+ * By default, all logs lives 10 days at most.
+ *
+ * @param _max_time    Max alive duration of a single log file in seconds, default is 10 days
+ */
+void appender_set_max_alive_duration(long _max_time);
 
 #endif /* APPENDER_H_ */

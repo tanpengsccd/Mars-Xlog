@@ -1,22 +1,22 @@
 {
   "name": "MARSDK",
-  "version": "0.0.9",
-  "summary": "tencent WeChat For MARS",
-  "description": "TODO: Add long description of the pod here.",
+  "version": "1.3.0",
+  "summary": "Tencent MARS xlog for OC & swift",
+  "description": "Tencent MARS only contain xlog, work for OC & swift. No STN etc.",
   "homepage": "https://github.com/7General/MarSDK.git",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "wanghuizhou21@163.com": "wanghuizhou21@163.com"
+    "tanpengsccd": "tanpeng@gmail.com"
   },
   "source": {
     "git": "https://github.com/7General/MarSDK.git",
-    "tag": "0.0.9"
+    "tag": "1.3.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "10.0"
   },
   "source_files": "MARSDK/Classes/**/*",
   "vendored_frameworks": "MARSDK/Framework/mars.framework",
@@ -35,9 +35,8 @@
     ]
   },
   "requires_arc": "MARSDK/Classes/MarsKit/**/*",
-  "dependencies": {
-    "Protobuf": [
-
-    ]
-  }
+  "xcconfig": {
+    "ENABLE_BITCODE": "NO"
+  },
+  "static_framework": true
 }
