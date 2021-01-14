@@ -8,14 +8,14 @@ import UIKit
 //import SwiftyUserDefaults
 
 ///所有日志的操作（日志，埋点，崩溃）
-public class XLogManager {
+open class XLogManager {
 
     public static let shared = XLogManager.init()
     ///崩溃日志文件夹
 //    static let crashLogDir      = "/Crash"
     ///xlog日志文件夹
     public static let DefaultXlogDir          = "/Log"
-    internal required init() {
+    public required init() {
         self.xlogDir = Self.DefaultXlogDir
     }
     private var xlogDir:String
